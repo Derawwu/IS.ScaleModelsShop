@@ -4,7 +4,6 @@ using IS.ScaleModelsShop.Application.Features.Categories.Queries.GetAllCategorie
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllManufacturersList;
-using IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetManufacturerProducts;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.UpdateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated;
@@ -26,7 +25,6 @@ namespace IS.ScaleModelsShop.Application.Profiles
             CreateMap<Manufacturer, CreateManufacturerDTO>().ReverseMap();
             CreateMap<Manufacturer, CreateManufacturerCommand>().ReverseMap();
             CreateMap<Manufacturer, ManufacturersListViewModel>().ReverseMap();
-            CreateMap<Manufacturer, ManufacturerProductsViewModel>().ReverseMap();
             CreateMap<UpdateManufacturerDTO, UpdateManufacturerCommand>().ReverseMap();
             CreateMap<Manufacturer, UpdateManufacturerCommand>().ReverseMap();
 

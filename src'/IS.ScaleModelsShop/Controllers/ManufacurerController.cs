@@ -2,7 +2,6 @@
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllManufacturersList;
-using IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetManufacturerProducts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,27 +33,6 @@ namespace IS.ScaleModelsShop.API.Controllers
             }
 
             return Ok(dtos);
-        }
-
-        [HttpGet("{manufacturerName}", Name = "GetAllProductsOfManufacturer")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetManufacturerProducts(string manufacturerName)
-        {
-            var query = new GetManufacturerProductsQuery()
-            {
-                ManufacturerName = manufacturerName
-            };
-
-            var dto = await _mediator.Send(query);
-
-            if (dto == null)
-            {
-                return NoContent();
-            }
-
-            return Ok(dto);
         }
 
         [HttpPost("createManufacturer", Name = "CreateNewManufacturer")]

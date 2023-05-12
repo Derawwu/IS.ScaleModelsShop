@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IS.ScaleModelsShop.Application.Exceptions;
 using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
 using LinqKit;
@@ -10,15 +11,22 @@ namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsBy
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public GetProductsByCategoryQueryHandler(IMapper mapper, IProductRepository productRepository)
+        public GetProductsByCategoryQueryHandler(IMapper mapper, IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
 
         public async Task<IEnumerable<ProductsDTO>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
         {
+            if (!await _categoryRepository.AnyAsync(x => x.Id == request.CategoryId))
+            {
+                throw new NotFoundException(nameof(Category), request.CategoryId);
+            }
+
             var predicate = PredicateBuilder.New<Product>(true);
 
             predicate = predicate.And(x => x.ProductCategory.Any(y => y.Category.Id == request.CategoryId));
