@@ -17,6 +17,8 @@ namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProduct
 
         public async Task<GetPaginatedProductViewModel> Handle(GetAllProductsPaginatedQuery request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             var list = await _productRepository.GetPaginatedProductsAsync(request.PageNumber, request.PageSize);
             var products = _mapper.Map<List<GetProductDTO>>(list);
 

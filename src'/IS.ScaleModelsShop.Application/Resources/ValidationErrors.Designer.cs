@@ -106,6 +106,24 @@ namespace IS.ScaleModelsShop.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Guid for &apos;{PropertyName}&apos; can not be Empty GUID. Please provide correct GUID..
+        /// </summary>
+        internal static string Product_Common_GuidCanNotBeEmptyGuid {
+            get {
+                return ResourceManager.GetString("Product_Common_GuidCanNotBeEmptyGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price of the product cannot be equal to &apos;{0}&apos;.Should be greater that zero..
+        /// </summary>
+        internal static string Product_Common_PriceShouldBeGreaterThanZero {
+            get {
+                return ResourceManager.GetString("Product_Common_PriceShouldBeGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Product with the same &apos;{PropertyName}&apos; already exists..
         /// </summary>
         internal static string Product_Common_SameProductAlreadyExist {

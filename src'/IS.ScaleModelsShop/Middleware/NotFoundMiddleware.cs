@@ -33,7 +33,7 @@ namespace IS.ScaleModelsShop.API.Middleware
 
             try
             {
-                await this.next(context);
+                await next(context);
             }
             catch (NotFoundException ex)
             {
@@ -45,7 +45,7 @@ namespace IS.ScaleModelsShop.API.Middleware
                     Status = StatusCodes.Status404NotFound
                 };
 
-                await this.responseHandler.HandleResponseAsync(context, ex, responseObject);
+                await responseHandler.HandleResponseAsync(context, ex, responseObject);
             }
         }
     }

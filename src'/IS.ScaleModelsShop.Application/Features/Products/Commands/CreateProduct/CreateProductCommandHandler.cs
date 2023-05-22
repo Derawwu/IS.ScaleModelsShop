@@ -13,26 +13,17 @@ namespace IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduc
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IManufacturerRepository _manufacturerRepository;
 
-        public CreateProductCommandHandler(IMapper mapper, IProductRepository productRepository, ICategoryRepository categoryRepository, IManufacturerRepository manufacturerRepository)
+        public CreateProductCommandHandler(IMapper mapper, IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
-            _manufacturerRepository = manufacturerRepository ?? throw new ArgumentNullException(nameof(manufacturerRepository));
         }
 
         public async Task<GetProductDTO> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var validator =
-                new CreateProductCommandValidator(_productRepository, _categoryRepository, _manufacturerRepository);
-            var validationResult = await validator.ValidateAsync(request);
-
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
+            _ = request ?? throw new ArgumentNullException(nameof(request));
 
             var product = _mapper.Map<Product>(request);
             product.ProductCategory = new List<ProductCategory>();

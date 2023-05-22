@@ -18,6 +18,8 @@ namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllMa
 
         public async Task<List<ManufacturersListViewModel>> Handle(GetAllManufacturersListQuery request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             var list = (await _manufacturerRepository.GetAllAsync()).OrderBy(m => m.Name);
 
             return _mapper.Map<List<ManufacturersListViewModel>>(list);

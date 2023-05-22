@@ -21,13 +21,7 @@ namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateM
 
         public async Task<CreateManufacturerDTO> Handle(CreateManufacturerCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateManufacturerCommandValidator(_manufacturerRepository);
-            var validationResult = await validator.ValidateAsync(request);
-
-            if (validationResult.Errors.Count > 0)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
+            _ = request ?? throw new ArgumentNullException(nameof(request));
 
             var manufacturer = new Manufacturer()
             {

@@ -19,14 +19,7 @@ namespace IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCate
 
         public async Task<CreateCategoryDTO> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateCategoryCommandValidator(_categoryRepository);
-            var validationResult = await validator.ValidateAsync(request);
-
-            if (validationResult.Errors.Count > 0)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
-
+            _ = request ?? throw new ArgumentNullException(nameof(request));
 
             var category = new Category()
             {

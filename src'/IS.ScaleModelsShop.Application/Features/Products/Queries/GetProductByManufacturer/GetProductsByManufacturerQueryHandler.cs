@@ -25,6 +25,8 @@ namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByM
 
         public async Task<IEnumerable<ProductsDTO>> Handle(GetProductsByManufacturerQuery request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             if (!await _manufacturerRepository.AnyAsync(x => x.Id == request.ManufacturerId))
                 throw new NotFoundException(nameof(Manufacturer), request.ManufacturerId);
 

@@ -1,4 +1,4 @@
-﻿namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductById
+﻿namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName
 {
     public class GetProductByNameViewModel
     {

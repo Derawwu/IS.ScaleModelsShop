@@ -16,6 +16,8 @@ namespace IS.ScaleModelsShop.Application.Extensions
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceCollectionDIExtension).Assembly));
             services.AddValidatorsFromAssembly(typeof(ServiceCollectionDIExtension).Assembly);
 
+            services.AddTransient(typeof(IPipelineBehavior<,>),
+                typeof(ValidationForEmptyResponseBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return services;

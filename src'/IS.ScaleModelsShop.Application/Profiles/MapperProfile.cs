@@ -7,7 +7,7 @@ using IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllManufa
 using IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.UpdateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated;
-using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductById;
+using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCategory;
 using IS.ScaleModelsShop.Domain.Entities;
 

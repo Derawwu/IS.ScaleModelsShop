@@ -18,7 +18,7 @@ namespace IS.ScaleModelsShop.Infrastructure.Repositories
             _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
         }
 
-        public async Task<IReadOnlyList<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _appDbContext.Set<TEntity>()
                 .AsNoTracking()

@@ -22,6 +22,8 @@ namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsBy
 
         public async Task<IEnumerable<ProductsDTO>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             if (!await _categoryRepository.AnyAsync(x => x.Id == request.CategoryId))
             {
                 throw new NotFoundException(nameof(Category), request.CategoryId);

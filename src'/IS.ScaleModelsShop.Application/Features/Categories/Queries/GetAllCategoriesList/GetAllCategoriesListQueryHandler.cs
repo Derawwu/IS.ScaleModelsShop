@@ -17,6 +17,8 @@ namespace IS.ScaleModelsShop.Application.Features.Categories.Queries.GetAllCateg
 
         public async Task<List<CategoryListViewModel>> Handle(GetAllCategoriesListQuery request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             var allCategories = (await _categoryRepository.GetAllAsync()).OrderBy(x => x.Name);
 
             return _mapper.Map<List<CategoryListViewModel>>(allCategories);

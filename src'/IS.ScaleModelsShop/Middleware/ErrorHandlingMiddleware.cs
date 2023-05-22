@@ -31,11 +31,11 @@ namespace IS.ScaleModelsShop.API.Middleware
 
             try
             {
-                await this.next(context);
+                await next(context);
             }
             catch (Exception ex)
             {
-                await this.HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
@@ -85,7 +85,7 @@ namespace IS.ScaleModelsShop.API.Middleware
                     break;
             }
 
-            await this.responseHandler.HandleResponseAsync(context, ex, responseObject);
+            await responseHandler.HandleResponseAsync(context, ex, responseObject);
         }
     }
 }

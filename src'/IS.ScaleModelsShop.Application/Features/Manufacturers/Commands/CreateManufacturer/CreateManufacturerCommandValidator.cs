@@ -16,7 +16,7 @@ namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateM
             .NotNull()
             .Length(3, 50)
             .MustAsync(async (name, _) => !await manufacturerRepository.AnyAsync(c => c.Name == name))
-            .WithMessage(_ => ValidationErrors.Category_Common_SameCategoryAlreadyExist);
+            .WithMessage(_ => ValidationErrors.Manufacturer_Common_SameManufacturerAlreadyExist);
         }
     }
 }

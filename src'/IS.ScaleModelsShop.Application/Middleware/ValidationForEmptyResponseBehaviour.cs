@@ -3,12 +3,12 @@ using MediatR;
 
 namespace IS.ScaleModelsShop.Application.Middleware
 {
-    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+    public class ValidationForEmptyResponseBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest
     {
         private readonly IEnumerable<IValidator<TRequest>> validators;
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+        public ValidationForEmptyResponseBehaviour(IEnumerable<IValidator<TRequest>> validators)
         {
             this.validators = validators ?? throw new ArgumentNullException(nameof(validators));
         }

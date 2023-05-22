@@ -20,7 +20,7 @@ namespace IS.ScaleModelsShop.Infrastructure.Repositories
             _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
         }
 
-        public async Task<List<Product>> GetPaginatedProductsAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Product>> GetPaginatedProductsAsync(int pageNumber, int pageSize)
         {
             return await _appDbContext.Products
                 .Skip((pageNumber - 1) * pageSize)
@@ -72,7 +72,7 @@ namespace IS.ScaleModelsShop.Infrastructure.Repositories
             await using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
             {
                 _appDbContext.ProductCategory.Remove(productCategory);
-                _appDbContext.Remove(entityToRemove);
+                _appDbContext.Products.Remove(entityToRemove);
 
                 await _appDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();

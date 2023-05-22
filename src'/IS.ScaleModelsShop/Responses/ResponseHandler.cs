@@ -29,7 +29,7 @@ namespace IS.ScaleModelsShop.API.Responses
             _ = context ?? throw new ArgumentNullException(nameof(context));
             _ = responseObject ?? throw new ArgumentNullException(nameof(responseObject));
 
-            var errorType = this.GetErrorType(responseObject.Status);
+            var errorType = GetErrorType(responseObject.Status);
 
             responseObject.Type = errorType;
 
@@ -41,7 +41,7 @@ namespace IS.ScaleModelsShop.API.Responses
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             };
 
-            await this.jsonResponseProvider.WriteAsJsonAsync(context.Response, responseObject, serializerOptions, ContentType);
+            await jsonResponseProvider.WriteAsJsonAsync(context.Response, responseObject, serializerOptions, ContentType);
         }
 
         private string GetErrorType(int? httpStatusCode)

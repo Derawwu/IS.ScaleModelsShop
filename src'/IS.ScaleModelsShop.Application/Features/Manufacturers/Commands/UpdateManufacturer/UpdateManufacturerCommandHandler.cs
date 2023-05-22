@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using IS.ScaleModelsShop.Application.Exceptions;
 using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
@@ -20,6 +19,8 @@ namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateM
 
         public async Task Handle(UpdateManufacturerCommand request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             var manufacturerToUpdate = await _manufacturerRepository.GetByIdAsync(request.Id);
 
             if (manufacturerToUpdate == null)

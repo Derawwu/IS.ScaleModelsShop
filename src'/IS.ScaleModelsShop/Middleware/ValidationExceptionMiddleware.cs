@@ -33,13 +33,13 @@ namespace IS.ScaleModelsShop.API.Middleware
 
             try
             {
-                await this.next(context);
+                await next(context);
             }
             catch (ValidationException ex)
             {
-                var responseObject = this.GetValidationResponse(ex);
+                var responseObject = GetValidationResponse(ex);
 
-                await this.responseHandler.HandleResponseAsync(context, ex, responseObject);
+                await responseHandler.HandleResponseAsync(context, ex, responseObject);
             }
         }
 
@@ -57,7 +57,7 @@ namespace IS.ScaleModelsShop.API.Middleware
             {
                 Title = ErrorTitles.ValidationError,
                 InvalidParameters = invalidParameters,
-                Status = this.GetStatusCodeFromValidationException(validationException)
+                Status = GetStatusCodeFromValidationException(validationException)
             };
 
             return responseObj;

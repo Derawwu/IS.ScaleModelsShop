@@ -4,6 +4,6 @@ namespace IS.ScaleModelsShop.Application.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
-        Task<List<Product>> GetPaginatedProductsAsync (int pageNumber, int pageSize);
+        Task<IEnumerable<Product>> GetPaginatedProductsAsync (int pageNumber, int pageSize);
     }
 }

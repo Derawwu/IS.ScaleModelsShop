@@ -2,8 +2,8 @@
 using IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.DeleteProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.UpdateProduct;
-using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductById;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByManufacturer;
+using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
