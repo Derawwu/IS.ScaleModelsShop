@@ -1,25 +1,24 @@
 ﻿using System.Net;
 
-namespace IS.ScaleModelsShop.API.Middleware
+namespace IS.ScaleModelsShop.API.Middleware;
+
+public class UrlDecodingMiddleware
 {
-    public class UrlDecodingMiddleware
+    private readonly RequestDelegate _next;
+
+    public UrlDecodingMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public UrlDecodingMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (context.Request.Path.HasValue)
         {
-            _next = next;
+            var path = WebUtility.UrlDecode(context.Request.Path.Value);
+            context.Request.Path = new PathString(path);
         }
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            if (context.Request.Path.HasValue)
-            {
-                var path = WebUtility.UrlDecode(context.Request.Path.Value);
-                context.Request.Path = new PathString(path);
-            }
-
-            await _next(context);
-        }
+        await _next(context);
     }
 }

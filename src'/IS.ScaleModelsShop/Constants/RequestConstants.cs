@@ -1,7 +1,6 @@
-﻿namespace IS.ScaleModelsShop.API.Constants
+﻿namespace IS.ScaleModelsShop.API.Constants;
+
+public class RequestConstants
 {
-    public class RequestConstants
-    {
-        public const string HealthCheckRequestUri = "/health";
-    }
+    public const string HealthCheckRequestUri = "/health";
 }

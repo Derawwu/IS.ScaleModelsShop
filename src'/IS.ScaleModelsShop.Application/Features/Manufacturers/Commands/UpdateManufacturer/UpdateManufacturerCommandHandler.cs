@@ -4,33 +4,30 @@ using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
 using MediatR;
 
-namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer
+namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer;
+
+public class UpdateManufacturerCommandHandler : IRequestHandler<UpdateManufacturerCommand>
 {
-    public class UpdateManufacturerCommandHandler : IRequestHandler<UpdateManufacturerCommand>
+    private readonly IManufacturerRepository _manufacturerRepository;
+    private readonly IMapper _mapper;
+
+    public UpdateManufacturerCommandHandler(IManufacturerRepository manufacturerRepository, IMapper mapper)
     {
-        private readonly IManufacturerRepository _manufacturerRepository;
-        private readonly IMapper _mapper;
+        _manufacturerRepository =
+            manufacturerRepository ?? throw new ArgumentNullException(nameof(manufacturerRepository));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    }
 
-        public UpdateManufacturerCommandHandler(IManufacturerRepository manufacturerRepository, IMapper mapper)
-        {
-            _manufacturerRepository = manufacturerRepository ?? throw new ArgumentNullException(nameof(manufacturerRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
+    public async Task Handle(UpdateManufacturerCommand request, CancellationToken cancellationToken)
+    {
+        _ = request ?? throw new ArgumentNullException(nameof(request));
 
-        public async Task Handle(UpdateManufacturerCommand request, CancellationToken cancellationToken)
-        {
-            _ = request ?? throw new ArgumentNullException(nameof(request));
+        var manufacturerToUpdate = await _manufacturerRepository.GetByIdAsync(request.Id);
 
-            var manufacturerToUpdate = await _manufacturerRepository.GetByIdAsync(request.Id);
+        if (manufacturerToUpdate == null) throw new NotFoundException(nameof(Manufacturer), request.Id);
 
-            if (manufacturerToUpdate == null)
-            {
-                throw new NotFoundException(nameof(Manufacturer), request.Id);
-            }
+        _mapper.Map(request, manufacturerToUpdate, typeof(UpdateManufacturerCommand), typeof(Manufacturer));
 
-            _mapper.Map(request, manufacturerToUpdate, typeof(UpdateManufacturerCommand), typeof(Manufacturer));
-
-            await _manufacturerRepository.UpdateAsync(manufacturerToUpdate);
-        }
+        await _manufacturerRepository.UpdateAsync(manufacturerToUpdate);
     }
 }

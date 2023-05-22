@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace IS.ScaleModelsShop.Application.Features.Products.Commands.DeleteProduct
+namespace IS.ScaleModelsShop.Application.Features.Products.Commands.DeleteProduct;
+
+public class DeleteProductCommand : IRequest
 {
-    public class DeleteProductCommand : IRequest
-    {
-        public Guid ProductId { get; set; }
-    }
+    public Guid ProductId { get; set; }
 }

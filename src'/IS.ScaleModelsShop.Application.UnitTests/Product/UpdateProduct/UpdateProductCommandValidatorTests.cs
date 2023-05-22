@@ -1,6 +1,5 @@
-﻿namespace IS.ScaleModelsShop.Application.UnitTests.Product.UpdateProduct
+﻿namespace IS.ScaleModelsShop.Application.UnitTests.Product.UpdateProduct;
+
+public class UpdateProductCommandValidatorTests
 {
-    public class UpdateProductCommandValidatorTests
-    {
-    }
 }

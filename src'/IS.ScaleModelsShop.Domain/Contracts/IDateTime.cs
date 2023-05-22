@@ -1,8 +1,7 @@
-﻿namespace IS.ScaleModelsShop.Domain.Contracts
+﻿namespace IS.ScaleModelsShop.Domain.Contracts;
+
+public interface IDateTime
 {
-    public interface IDateTime
-    {
-        /// <inheritdoc cref="DateTime.UtcNow" />
-        DateTime UtcNow { get; }
-    }
+    /// <inheritdoc cref="DateTime.UtcNow" />
+    DateTime UtcNow { get; }
 }

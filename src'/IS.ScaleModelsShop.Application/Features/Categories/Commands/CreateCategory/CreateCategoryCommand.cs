@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory
+namespace IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory;
+
+public class CreateCategoryCommand : IRequest<CreateCategoryDTO>
 {
-    public class CreateCategoryCommand : IRequest<CreateCategoryDTO>
-    {
-        public string Name { get; set; } = string.Empty;
-    }
+    public string Name { get; set; } = string.Empty;
 }

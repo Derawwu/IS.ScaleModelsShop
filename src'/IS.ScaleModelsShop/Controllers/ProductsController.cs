@@ -8,115 +8,114 @@ using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCate
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IS.ScaleModelsShop.API.Controllers
+namespace IS.ScaleModelsShop.API.Controllers;
+
+[Route("[controller]")]
+[ApiController]
+public class ProductsController : Controller
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class ProductsController : Controller
+    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+
+    public ProductsController(IMediator mediator, IMapper mapper)
     {
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _mapper = mapper;
+    }
 
-        public ProductsController(IMediator mediator, IMapper mapper)
+    [HttpGet("{name}", Name = "GetProductByName")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductByName([FromRoute] string name)
+    {
+        var request = new GetProductByNameQuery
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _mapper = mapper;
-        }
+            Name = name
+        };
 
-        [HttpGet("{name}", Name = "GetProductByName")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetProductByName([FromRoute] string name)
+        var dto = await _mediator.Send(request);
+
+        return new OkObjectResult(dto)
         {
-            var request = new GetProductByNameQuery()
-            {
-                Name = name
-            };
+            StatusCode = StatusCodes.Status200OK
+        };
+    }
 
-            var dto = await _mediator.Send(request);
-
-            return new OkObjectResult(dto)
-            {
-                StatusCode = StatusCodes.Status200OK
-            };
-        }
-
-        [HttpGet("getProductsByCategory/{categoryId}", Name = "GetAllProductsOfCategory")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetProductsByCategory([FromRoute] Guid categoryId)
+    [HttpGet("getProductsByCategory/{categoryId}", Name = "GetAllProductsOfCategory")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductsByCategory([FromRoute] Guid categoryId)
+    {
+        var query = new GetProductsByCategoryQuery
         {
-            var query = new GetProductsByCategoryQuery()
-            {
-                CategoryId = categoryId
-            };
+            CategoryId = categoryId
+        };
 
-            var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query);
 
-            return new OkObjectResult(result)
-            {
-                StatusCode = StatusCodes.Status200OK
-            };
-        }
-
-        [HttpGet("getProductsByManufacturer/{manufacturerId}", Name = "GetAllProductsOfManufacturer")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetProductsByManufacturer([FromRoute] Guid manufacturerId)
+        return new OkObjectResult(result)
         {
-            var query = new GetProductsByManufacturerQuery()
-            {
-                ManufacturerId = manufacturerId
-            };
+            StatusCode = StatusCodes.Status200OK
+        };
+    }
 
-            var result = await _mediator.Send(query);
-
-            return new OkObjectResult(result)
-            {
-                StatusCode = StatusCodes.Status200OK
-            };
-        }
-
-        [HttpPost("createProduct", Name = "CreateNewProduct")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
+    [HttpGet("getProductsByManufacturer/{manufacturerId}", Name = "GetAllProductsOfManufacturer")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductsByManufacturer([FromRoute] Guid manufacturerId)
+    {
+        var query = new GetProductsByManufacturerQuery
         {
-            var dto = await _mediator.Send(command);
+            ManufacturerId = manufacturerId
+        };
 
-            return new OkObjectResult(dto)
-            {
-                StatusCode = StatusCodes.Status201Created
-            };
-        }
+        var result = await _mediator.Send(query);
 
-        [HttpPut("updateProduct/{productId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId, [FromBody] UpdateProductDTO body)
+        return new OkObjectResult(result)
         {
-            var command = _mapper.Map<UpdateProductCommand>(body);
+            StatusCode = StatusCodes.Status200OK
+        };
+    }
 
-            command.Id = productId;
+    [HttpPost("createProduct", Name = "CreateNewProduct")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
+    {
+        var dto = await _mediator.Send(command);
 
-            await _mediator.Send(command);
-
-            return new NoContentResult();
-        }
-
-        [HttpDelete("deleteProduct/{productId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId)
+        return new OkObjectResult(dto)
         {
-            var command = new DeleteProductCommand() { ProductId = productId };
+            StatusCode = StatusCodes.Status201Created
+        };
+    }
 
-            await _mediator.Send(command);
+    [HttpPut("updateProduct/{productId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId, [FromBody] UpdateProductDTO body)
+    {
+        var command = _mapper.Map<UpdateProductCommand>(body);
 
-            return new NoContentResult();
-        }
+        command.Id = productId;
+
+        await _mediator.Send(command);
+
+        return new NoContentResult();
+    }
+
+    [HttpDelete("deleteProduct/{productId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId)
+    {
+        var command = new DeleteProductCommand { ProductId = productId };
+
+        await _mediator.Send(command);
+
+        return new NoContentResult();
     }
 }

@@ -1,11 +1,10 @@
 ﻿using MediatR;
 
-namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated
-{
-    public class GetAllProductsPaginatedQuery : IRequest<GetPaginatedProductViewModel>
-    {
-        public int PageNumber { get; set; }
+namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated;
 
-        public int PageSize { get; set; }
-    }
+public class GetAllProductsPaginatedQuery : IRequest<GetPaginatedProductViewModel>
+{
+    public int PageNumber { get; set; }
+
+    public int PageSize { get; set; }
 }

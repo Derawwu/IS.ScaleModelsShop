@@ -2,27 +2,28 @@
 using IS.ScaleModelsShop.Application.Repositories;
 using MediatR;
 
-namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllManufacturersList
+namespace IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllManufacturersList;
+
+public class
+    GetAllManufacturersQueryHandler : IRequestHandler<GetAllManufacturersListQuery, List<ManufacturersListViewModel>>
 {
-    public class GetAllManufacturersQueryHandler : IRequestHandler<GetAllManufacturersListQuery, List<ManufacturersListViewModel>>
+    private readonly IManufacturerRepository _manufacturerRepository;
+    private readonly IMapper _mapper;
+
+    public GetAllManufacturersQueryHandler(IMapper mapper, IManufacturerRepository manufacturerRepository)
     {
-        private readonly IMapper _mapper;
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _manufacturerRepository =
+            manufacturerRepository ?? throw new ArgumentNullException(nameof(manufacturerRepository));
+    }
 
-        private readonly IManufacturerRepository _manufacturerRepository;
+    public async Task<List<ManufacturersListViewModel>> Handle(GetAllManufacturersListQuery request,
+        CancellationToken cancellationToken)
+    {
+        _ = request ?? throw new ArgumentNullException(nameof(request));
 
-        public GetAllManufacturersQueryHandler(IMapper mapper, IManufacturerRepository manufacturerRepository)
-        {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _manufacturerRepository = manufacturerRepository ?? throw new ArgumentNullException(nameof(manufacturerRepository));
-        }
+        var list = (await _manufacturerRepository.GetAllAsync()).OrderBy(m => m.Name);
 
-        public async Task<List<ManufacturersListViewModel>> Handle(GetAllManufacturersListQuery request, CancellationToken cancellationToken)
-        {
-            _ = request ?? throw new ArgumentNullException(nameof(request));
-
-            var list = (await _manufacturerRepository.GetAllAsync()).OrderBy(m => m.Name);
-
-            return _mapper.Map<List<ManufacturersListViewModel>>(list);
-        }
+        return _mapper.Map<List<ManufacturersListViewModel>>(list);
     }
 }

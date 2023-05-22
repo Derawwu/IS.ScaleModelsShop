@@ -1,8 +1,7 @@
-﻿namespace IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory
+﻿namespace IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory;
+
+public class CreateCategoryDTO
 {
-    public class CreateCategoryDTO
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

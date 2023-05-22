@@ -5,65 +5,61 @@ using IS.ScaleModelsShop.Application.Profiles;
 using IS.ScaleModelsShop.Application.Repositories;
 using Moq;
 
-namespace IS.ScaleModelsShop.Application.UnitTests.Manufacturer.CreateManufacturer
+namespace IS.ScaleModelsShop.Application.UnitTests.Manufacturer.CreateManufacturer;
+
+public class CreateManufacturerCommandHandlerTests
 {
-    public class CreateManufacturerCommandHandlerTests
+    private CreateManufacturerCommand _fakeManufacturer;
+    private CreateManufacturerCommandHandler _handler;
+    private Mock<IManufacturerRepository> _manufacturerRepositoryMock;
+    private IMapper _mapper;
+
+    [SetUp]
+    public void Setup()
     {
-        private CreateManufacturerCommandHandler _handler;
-        private Mock<IManufacturerRepository> _manufacturerRepositoryMock;
-        private IMapper _mapper;
-        private CreateManufacturerCommand _fakeManufacturer;
+        _manufacturerRepositoryMock = new Mock<IManufacturerRepository>();
 
-        [SetUp]
-        public void Setup()
+        var configurationProvider = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfile>(); });
+
+        _mapper = configurationProvider.CreateMapper();
+
+        _fakeManufacturer = new CreateManufacturerCommand
         {
-            _manufacturerRepositoryMock = new Mock<IManufacturerRepository>();
+            Name = nameof(CreateManufacturerCommand)
+        };
 
-            var configurationProvider = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MapperProfile>();
-            });
+        _handler = new CreateManufacturerCommandHandler(_mapper, _manufacturerRepositoryMock.Object);
+    }
 
-            _mapper = configurationProvider.CreateMapper();
+    [Test]
+    public void Constructor_WhenCalledWithNoRepository_ShouldThrowNewArgumentNullException()
+    {
+        Action result = () => new CreateManufacturerCommandHandler(_mapper, null);
 
-            _fakeManufacturer = new()
-            {
-                Name = nameof(CreateManufacturerCommand)
-            };
+        result.Should().Throw<ArgumentNullException>();
+    }
 
-            _handler = new CreateManufacturerCommandHandler(_mapper, _manufacturerRepositoryMock.Object);
-        }
+    [Test]
+    public void Constructor_WhenCalledWithNoMapper_ShouldThrowNewArgumentNullException()
+    {
+        Action result = () => new CreateManufacturerCommandHandler(null, _manufacturerRepositoryMock.Object);
 
-        [Test]
-        public void Constructor_WhenCalledWithNoRepository_ShouldThrowNewArgumentNullException()
-        {
-            Action result = () => new CreateManufacturerCommandHandler(_mapper, null);
+        result.Should().Throw<ArgumentNullException>();
+    }
 
-            result.Should().Throw<ArgumentNullException>();
-        }
+    [Test]
+    public async Task Handler_WhenCalledCreateCategory_ShouldCreateCategory()
+    {
+        await _handler.Handle(_fakeManufacturer, CancellationToken.None);
 
-        [Test]
-        public void Constructor_WhenCalledWithNoMapper_ShouldThrowNewArgumentNullException()
-        {
-            Action result = () => new CreateManufacturerCommandHandler(null, _manufacturerRepositoryMock.Object);
+        _manufacturerRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Domain.Entities.Manufacturer>()), Times.Once);
+    }
 
-            result.Should().Throw<ArgumentNullException>();
-        }
+    [Test]
+    public async Task Handler_WhenCalledWIthNullRequest_ShouldThrowNewArgumentNullException()
+    {
+        Func<Task> result = async () => await _handler.Handle(null, CancellationToken.None);
 
-        [Test]
-        public async Task Handler_WhenCalledCreateCategory_ShouldCreateCategory()
-        {
-            await _handler.Handle(_fakeManufacturer, CancellationToken.None);
-
-            _manufacturerRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Domain.Entities.Manufacturer>()), Times.Once);
-        }
-
-        [Test]
-        public async Task Handler_WhenCalledWIthNullRequest_ShouldThrowNewArgumentNullException()
-        {
-            Func<Task> result = async () => await _handler.Handle(null, CancellationToken.None);
-
-            await result.Should().ThrowAsync<ArgumentNullException>();
-        }
+        await result.Should().ThrowAsync<ArgumentNullException>();
     }
 }

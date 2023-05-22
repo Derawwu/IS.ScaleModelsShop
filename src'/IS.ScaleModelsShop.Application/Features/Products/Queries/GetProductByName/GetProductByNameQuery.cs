@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName
+namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName;
+
+public class GetProductByNameQuery : IRequest<GetProductByNameViewModel>
 {
-    public class GetProductByNameQuery : IRequest<GetProductByNameViewModel>
-    {
-        public string Name { get; set; } = string.Empty;
-    }
+    public string Name { get; set; } = string.Empty;
 }

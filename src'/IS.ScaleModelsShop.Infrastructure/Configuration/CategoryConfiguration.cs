@@ -2,15 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace IS.ScaleModelsShop.Infrastructure.Configuration
+namespace IS.ScaleModelsShop.Infrastructure.Configuration;
+
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    public void Configure(EntityTypeBuilder<Category> builder)
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
-        {
-            builder.Property(c => c.Name)
-                .IsRequired()
-                .HasMaxLength(50);
-        }
+        builder.Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(50);
     }
 }

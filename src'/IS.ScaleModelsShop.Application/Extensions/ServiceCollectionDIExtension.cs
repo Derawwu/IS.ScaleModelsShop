@@ -4,23 +4,22 @@ using IS.ScaleModelsShop.Application.Middleware;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IS.ScaleModelsShop.Application.Extensions
+namespace IS.ScaleModelsShop.Application.Extensions;
+
+public static class ServiceCollectionDIExtension
 {
-    public static class ServiceCollectionDIExtension
+    public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
     {
-        public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
+        var assembly = Assembly.GetExecutingAssembly();
 
-            services.AddAutoMapper(typeof(ServiceCollectionDIExtension).Assembly);
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceCollectionDIExtension).Assembly));
-            services.AddValidatorsFromAssembly(typeof(ServiceCollectionDIExtension).Assembly);
+        services.AddAutoMapper(typeof(ServiceCollectionDIExtension).Assembly);
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(ServiceCollectionDIExtension).Assembly));
+        services.AddValidatorsFromAssembly(typeof(ServiceCollectionDIExtension).Assembly);
 
-            services.AddTransient(typeof(IPipelineBehavior<,>),
-                typeof(ValidationForEmptyResponseBehaviour<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>),
+            typeof(ValidationForEmptyResponseBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-            return services;
-        }
+        return services;
     }
 }

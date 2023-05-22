@@ -1,97 +1,95 @@
 ﻿using System.Linq.Expressions;
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateManufacturer;
 using IS.ScaleModelsShop.Application.Repositories;
 using Moq;
 
-namespace IS.ScaleModelsShop.Application.UnitTests.Manufacturer.CreateManufacturer
+namespace IS.ScaleModelsShop.Application.UnitTests.Manufacturer.CreateManufacturer;
+
+public class CreateManufacturerCommandValidatorTests
 {
-    public class CreateManufacturerCommandValidatorTests
+    private CreateManufacturerCommand _fakeCreateManufacturerCommand;
+    private Mock<IManufacturerRepository> _manufacturerRepositoryMock;
+    private CreateManufacturerCommandValidator _validator;
+
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IManufacturerRepository> _manufacturerRepositoryMock;
-        private CreateManufacturerCommandValidator _validator;
-        private CreateManufacturerCommand _fakeCreateManufacturerCommand;
+        _manufacturerRepositoryMock = new Mock<IManufacturerRepository>();
 
-        [SetUp]
-        public void Setup()
+        _validator = new CreateManufacturerCommandValidator(_manufacturerRepositoryMock.Object);
+
+        _fakeCreateManufacturerCommand = new CreateManufacturerCommand
         {
-            _manufacturerRepositoryMock = new Mock<IManufacturerRepository>();
+            Name = nameof(CreateManufacturerCommand)
+        };
+    }
 
-            _validator = new CreateManufacturerCommandValidator(_manufacturerRepositoryMock.Object);
+    [Test]
+    public void Constructor_WhenCalledWithoutCategoryRepository_ShouldThrowArgumentNullException()
+    {
+        Action result = () => new CreateManufacturerCommandValidator(null);
 
-            _fakeCreateManufacturerCommand = new()
-            {
-                Name = nameof(CreateManufacturerCommand)
-            };
-        }
+        result.Should().Throw<ArgumentNullException>();
+    }
 
-        [Test]
-        public void Constructor_WhenCalledWithoutCategoryRepository_ShouldThrowArgumentNullException()
-        {
-            Action result = () => new CreateManufacturerCommandValidator(null);
+    [Test]
+    public async Task Validator_WhenNameIsNull_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Name);
+        _fakeCreateManufacturerCommand.Name = null;
 
-            result.Should().Throw<ArgumentNullException>();
-        }
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
+        result.ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage($"'{propertyName}' must not be empty.");
+    }
 
-        [Test]
-        public async Task Validator_WhenNameIsNull_ShouldHaveError()
-        {
-            var propertyName = nameof(CreateManufacturerCommand.Name);
-            _fakeCreateManufacturerCommand.Name = null;
+    [Test]
+    public async Task Validator_WhenNameIsEmpty_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Name);
+        _fakeCreateManufacturerCommand.Name = string.Empty;
 
-            var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
-            result.ShouldHaveValidationErrorFor(propertyName)
-                .WithErrorMessage($"'{propertyName}' must not be empty.");
-        }
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
+        result.ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage($"'{propertyName}' must not be empty.");
+    }
 
-        [Test]
-        public async Task Validator_WhenNameIsEmpty_ShouldHaveError()
-        {
-            var propertyName = nameof(CreateManufacturerCommand.Name);
-            _fakeCreateManufacturerCommand.Name = string.Empty;
+    [Test]
+    public async Task Validator_WhenNameIsTooShort_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Name);
+        _fakeCreateManufacturerCommand.Name = new string('a', 2);
 
-            var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
-            result.ShouldHaveValidationErrorFor(propertyName)
-                .WithErrorMessage($"'{propertyName}' must not be empty.");
-        }
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
+        result.ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage($"'{propertyName}' must be between 3 and 50 characters. You entered 2 characters.");
+    }
 
-        [Test]
-        public async Task Validator_WhenNameIsTooShort_ShouldHaveError()
-        {
-            var propertyName = nameof(CreateManufacturerCommand.Name);
-            _fakeCreateManufacturerCommand.Name = new string('a', 2);
+    [Test]
+    public async Task Validator_WhenNameIsTooLong_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Name);
+        _fakeCreateManufacturerCommand.Name = new string('a', 51);
 
-            var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
-            result.ShouldHaveValidationErrorFor(propertyName)
-                .WithErrorMessage($"'{propertyName}' must be between 3 and 50 characters. You entered 2 characters.");
-        }
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
+        result.ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage($"'{propertyName}' must be between 3 and 50 characters. You entered 51 characters.");
+    }
 
-        [Test]
-        public async Task Validator_WhenNameIsTooLong_ShouldHaveError()
-        {
-            var propertyName = nameof(CreateManufacturerCommand.Name);
-            _fakeCreateManufacturerCommand.Name = new string('a', 51);
+    [Test]
+    public async Task Validator_WhenDuplicatedNameProvided_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Name);
+        _manufacturerRepositoryMock.Setup(x =>
+            x.AnyAsync(It.Is<Expression<Func<Domain.Entities.Manufacturer, bool>>>(s =>
+                s.Body.ToString().Contains(nameof(Domain.Entities.Manufacturer.Name))))).ReturnsAsync(true);
 
-            var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
-            result.ShouldHaveValidationErrorFor(propertyName)
-                .WithErrorMessage($"'{propertyName}' must be between 3 and 50 characters. You entered 51 characters.");
-        }
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
 
-        [Test]
-        public async Task Validator_WhenDuplicatedNameProvided_ShouldHaveError()
-        {
-            var propertyName = nameof(CreateManufacturerCommand.Name);
-            _manufacturerRepositoryMock.Setup(x =>
-                x.AnyAsync(It.Is<Expression<Func<Domain.Entities.Manufacturer, bool>>>(s =>
-                    s.Body.ToString().Contains(nameof(Domain.Entities.Manufacturer.Name))))).ReturnsAsync(true);
-
-            var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
-
-            result
-                .ShouldHaveValidationErrorFor(propertyName)
-                .WithErrorMessage($"Manufacturer with the same '{propertyName}' already exists.");
-        }
+        result
+            .ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage($"Manufacturer with the same '{propertyName}' already exists.");
     }
 }

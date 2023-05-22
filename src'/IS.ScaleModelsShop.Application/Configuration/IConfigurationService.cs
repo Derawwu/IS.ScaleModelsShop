@@ -1,16 +1,15 @@
-﻿namespace IS.ScaleModelsShop.Application.Configuration
+﻿namespace IS.ScaleModelsShop.Application.Configuration;
+
+/// <summary>
+///     Defines functionality to configure application settings.
+/// </summary>
+public interface IConfigurationService
 {
     /// <summary>
-    /// Defines functionality to configure application settings.
+    ///     Gets configuration by type.
     /// </summary>
-    public interface IConfigurationService
-    {
-        /// <summary>
-        /// Gets configuration by type.
-        /// </summary>
-        /// <typeparam name="T">Data type.</typeparam>
-        /// <param name="configurationKey">Key for getting configuration value.</param>
-        /// <returns>Configuration instance.</returns>
-        T GetConfiguration<T>(string configurationKey);
-    }
+    /// <typeparam name="T">Data type.</typeparam>
+    /// <param name="configurationKey">Key for getting configuration value.</param>
+    /// <returns>Configuration instance.</returns>
+    T GetConfiguration<T>(string configurationKey);
 }

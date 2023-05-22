@@ -1,7 +1,6 @@
-﻿namespace IS.ScaleModelsShop.Infrastructure.Constants
+﻿namespace IS.ScaleModelsShop.Infrastructure.Constants;
+
+public class SqlConstants
 {
-    public class SqlConstants
-    {
-        public const string ScaleModelsSqlServerConnectionString = "SqlServerConnectionString";
-    }
+    public const string ScaleModelsSqlServerConnectionString = "SqlServerConnectionString";
 }
