@@ -22,19 +22,23 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Product>()
             .Property(p => p.Id)
-            .HasDefaultValueSql("newId()");
+            .HasDefaultValueSql("(newid())");
 
         modelBuilder.Entity<Category>()
             .Property(c => c.Id)
-            .HasDefaultValueSql("newId()");
+            .HasDefaultValueSql("(newid())");
 
         modelBuilder.Entity<Manufacturer>()
             .Property(m => m.Id)
-            .HasDefaultValueSql("newId()");
+            .HasDefaultValueSql("(newid())");
+
+        modelBuilder.Entity<ProductCategory>()
+            .Property(pc => pc.Id)
+            .HasDefaultValueSql("(newid())");
 
         modelBuilder.Entity<ProductCategory>(entity =>
         {
-            entity.HasKey(e => new { e.LinkedCategoryId, e.LinkedProductId });
+            entity.HasKey(e => new { e.Id });
 
             entity.HasOne(x => x.Product)
                 .WithMany(x => x.ProductCategory)

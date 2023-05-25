@@ -15,13 +15,4 @@ public class ManufacturerRepository : Repository<Manufacturer>, IManufacturerRep
     {
         _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
     }
-
-    public async Task<Manufacturer> GetManufacturerProductsAsync(string manufacturerName)
-    {
-        var manufacturerId = (await _appDbContext.Manufacturers.SingleAsync(m => m.Name == manufacturerName)).Id;
-
-        var list = await _appDbContext.Manufacturers.Include(m => m.Products).SingleAsync(m => m.Id == manufacturerId);
-
-        return list;
-    }
 }

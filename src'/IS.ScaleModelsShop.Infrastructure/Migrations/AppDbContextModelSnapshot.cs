@@ -27,7 +27,7 @@ namespace IS.ScaleModelsShop.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("newId()");
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -56,7 +56,7 @@ namespace IS.ScaleModelsShop.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("newId()");
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -89,7 +89,7 @@ namespace IS.ScaleModelsShop.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("newId()");
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
@@ -147,7 +147,8 @@ namespace IS.ScaleModelsShop.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");

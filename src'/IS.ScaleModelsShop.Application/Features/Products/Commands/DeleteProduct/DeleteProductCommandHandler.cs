@@ -16,6 +16,8 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand>
 
     public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
+        _ = request ?? throw new ArgumentNullException(nameof(request));
+
         var entityToDelete = await _productRepository.GetByIdAsync(request.ProductId);
 
         if (entityToDelete == null) throw new NotFoundException(nameof(Product), request.ProductId);

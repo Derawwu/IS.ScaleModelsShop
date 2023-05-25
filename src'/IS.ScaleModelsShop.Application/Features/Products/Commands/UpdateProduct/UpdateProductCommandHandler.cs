@@ -19,6 +19,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand>
 
     public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
+        _ = request ?? throw new ArgumentNullException(nameof(request));
+
         var entityToUpdate = await _productRepository.GetByIdAsync(request.Id);
 
         if (entityToUpdate == null) throw new NotFoundException(nameof(Product), request.Id);

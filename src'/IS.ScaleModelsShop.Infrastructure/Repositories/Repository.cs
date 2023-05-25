@@ -30,7 +30,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         return await _appDbContext.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task<TEntity> AddAsync(TEntity entity)
+    public virtual async Task<TEntity> AddAsync(TEntity entity)
     {
         if (entity is AuditableEntity auditableEntity)
         {

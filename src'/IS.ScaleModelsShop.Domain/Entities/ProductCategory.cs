@@ -17,5 +17,10 @@ public class ProductCategory : AuditableEntity
 
     [ForeignKey(nameof(LinkedCategoryId))]
     [InverseProperty(nameof(ProductCategory))]
-    public Category Category { get; set; }
+    public virtual Category Category { get; set; }
+
+    public ProductCategory()
+    {
+        if(Id == Guid.Empty) Id = Guid.NewGuid();
+    }
 }

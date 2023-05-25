@@ -13,11 +13,11 @@ public class ProductRepository : Repository<Product>, IProductRepository
     private readonly AppDbContext _appDbContext;
     private readonly IDateTime _dateTime;
 
-    public ProductRepository(AppDbContext appDbContext, IDateTime dateTimeService, IDateTime dateTime) : base(
+    public ProductRepository(AppDbContext appDbContext, IDateTime dateTimeService) : base(
         appDbContext, dateTimeService)
     {
         _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
-        _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
+        _dateTime = dateTimeService ?? throw new ArgumentNullException(nameof(dateTimeService));
     }
 
     public async Task<IEnumerable<Product>> GetPaginatedProductsAsync(int pageNumber, int pageSize)
@@ -32,44 +32,27 @@ public class ProductRepository : Repository<Product>, IProductRepository
     {
         if (entity is AuditableEntity auditableEntity) auditableEntity.LastModifiedDate = _dateTime.UtcNow;
 
-        var productCategory = (await _appDbContext.Products
-            .Include(x => x.ProductCategory)
-            .Where(x => x.Id == entity.Id)
-            .SingleAsync()).ProductCategory.Single();
+        _appDbContext.Products.Update(entity);
+        await _appDbContext.SaveChangesAsync();
 
+        var categoryProducts = _appDbContext.ProductCategory.Where(cp => cp.LinkedProductId == entity.Id);
 
-        await using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
+        foreach (var categoryProduct in categoryProducts)
         {
-            _appDbContext.Update(entity);
-            _appDbContext.ProductCategory.Remove(productCategory);
-            await _appDbContext.SaveChangesAsync();
-
-            productCategory.LinkedCategoryId = entity.CategoryId;
-            await _appDbContext.ProductCategory.AddAsync(productCategory);
-            await _appDbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
+            categoryProduct.LinkedCategoryId = entity.CategoryId;
         }
+
+        await _appDbContext.SaveChangesAsync();
     }
 
     public override async Task DeleteAsync(Guid id)
     {
         var entityToRemove = await _appDbContext.Products.FindAsync(id);
+        var categoryProductsToRemove = _appDbContext.ProductCategory.Where(cp => cp.LinkedProductId == entityToRemove.Id);
 
-        if (entityToRemove is AuditableEntity auditableEntity) auditableEntity.LastModifiedDate = _dateTime.UtcNow;
-
-        var productCategory = (await _appDbContext.Products
-            .Include(x => x.ProductCategory)
-            .Where(x => x.Id == entityToRemove.Id)
-            .SingleAsync()).ProductCategory.Single();
-
-        await using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
-        {
-            _appDbContext.ProductCategory.Remove(productCategory);
-            _appDbContext.Products.Remove(entityToRemove);
-
-            await _appDbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
+        _appDbContext.ProductCategory.RemoveRange(categoryProductsToRemove);
+        _appDbContext.Remove(entityToRemove);
+        await _appDbContext.SaveChangesAsync();
     }
 
     public override async Task<IEnumerable<TResult>> FilterAsync<TResult>(
