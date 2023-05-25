@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.DeleteProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.UpdateProduct;
+using IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByManufacturer;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCategory;
@@ -16,12 +18,44 @@ public class ProductsController : Controller
 {
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
+    private const int MinimalPageSize = 1;
+    private const int MinimalPageCount = 1;
 
     public ProductsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _mapper = mapper;
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
+
+    [HttpGet(Name = "GetProductsPaginated")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> GetProductsPaginated([FromQuery] int pageSize, int pageCount)
+    {
+        pageSize = pageSize < MinimalPageSize
+            ? MinimalPageSize
+            : pageSize;
+
+        pageCount = pageCount < MinimalPageCount
+            ? MinimalPageCount
+            : pageCount;
+
+        var query = new GetAllProductsPaginatedQuery()
+        {
+            PageSize = pageSize,
+            PageNumber = pageCount
+        };
+
+        var response = await _mediator.Send(query);
+
+        if (!response.Products.Any()) return new NoContentResult();
+
+        return new OkObjectResult(response)
+        {
+            StatusCode = StatusCodes.Status200OK
+        };
+    }
+
 
     [HttpGet("{name}", Name = "GetProductByName")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -41,7 +75,7 @@ public class ProductsController : Controller
         };
     }
 
-    [HttpGet("getProductsByCategory/{categoryId}", Name = "GetAllProductsOfCategory")]
+    [HttpGet("get-products-by-category/{categoryId}", Name = "GetAllProductsOfCategory")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,13 +88,15 @@ public class ProductsController : Controller
 
         var result = await _mediator.Send(query);
 
+        if (!result.Any()) return new NoContentResult();
+
         return new OkObjectResult(result)
         {
             StatusCode = StatusCodes.Status200OK
         };
     }
 
-    [HttpGet("getProductsByManufacturer/{manufacturerId}", Name = "GetAllProductsOfManufacturer")]
+    [HttpGet("get-products-by-manufacturer/{manufacturerId}", Name = "GetAllProductsOfManufacturer")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -73,13 +109,15 @@ public class ProductsController : Controller
 
         var result = await _mediator.Send(query);
 
+        if (!result.Any()) return new NoContentResult();
+
         return new OkObjectResult(result)
         {
             StatusCode = StatusCodes.Status200OK
         };
     }
 
-    [HttpPost("createProduct", Name = "CreateNewProduct")]
+    [HttpPost(Name = "CreateNewProduct")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
@@ -92,7 +130,7 @@ public class ProductsController : Controller
         };
     }
 
-    [HttpPut("updateProduct/{productId}")]
+    [HttpPut("{productId}", Name = "UpdateProduct")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -107,10 +145,10 @@ public class ProductsController : Controller
         return new NoContentResult();
     }
 
-    [HttpDelete("deleteProduct/{productId}")]
+    [HttpDelete("{productId}", Name = "DeleteProduct")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId)
+    public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId)
     {
         var command = new DeleteProductCommand { ProductId = productId };
 

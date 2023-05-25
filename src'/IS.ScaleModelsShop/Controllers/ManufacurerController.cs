@@ -27,9 +27,12 @@ public class ManufacturerController : Controller
     {
         var dtos = await _mediator.Send(new GetAllManufacturersListQuery());
 
-        if (!dtos.Any()) return NoContent();
+        if (!dtos.Any()) return new NoContentResult();
 
-        return Ok(dtos);
+        return new OkObjectResult(dtos)
+        {
+            StatusCode = StatusCodes.Status200OK
+        };
     }
 
     [HttpPost("createManufacturer", Name = "CreateNewManufacturer")]

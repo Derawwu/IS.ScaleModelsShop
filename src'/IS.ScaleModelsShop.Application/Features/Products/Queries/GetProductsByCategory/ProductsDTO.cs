@@ -10,5 +10,5 @@ public class ProductsDTO
 
     public decimal Price { get; set; }
 
-    public Guid Manufacturer { get; set; } = Guid.Empty;
+    //public Guid Manufacturer { get; set; } = Guid.Empty;
 }

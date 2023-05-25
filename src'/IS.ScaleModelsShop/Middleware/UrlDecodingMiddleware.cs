@@ -8,11 +8,13 @@ public class UrlDecodingMiddleware
 
     public UrlDecodingMiddleware(RequestDelegate next)
     {
-        _next = next;
+        _next = next ?? throw new ArgumentNullException(nameof(next));
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
+        _ = context ?? throw new ArgumentNullException(nameof(context));
+
         if (context.Request.Path.HasValue)
         {
             var path = WebUtility.UrlDecode(context.Request.Path.Value);

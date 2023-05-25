@@ -24,31 +24,15 @@ public class CategoryController : Controller
     {
         var dtos = await _mediator.Send(new GetAllCategoriesListQuery());
 
-        if (!dtos.Any()) return NoContent();
+        //dtos.RemoveAll(x => x == null );
 
-        return Ok(dtos);
+        if (!dtos.Any()) return new NoContentResult();
+
+        return new OkObjectResult(dtos)
+        {
+            StatusCode = StatusCodes.Status200OK
+        };
     }
-
-    //[HttpGet("{categoryName}", Name = "GetAllProductsOfCategory")]
-    //[ProducesResponseType(StatusCodes.Status200OK)]
-    //[ProducesResponseType(StatusCodes.Status204NoContent)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<IActionResult> GetCategoryProducts(string categoryName)
-    //{
-    //    var query = new GetCategoryProductsQuery()
-    //    {
-    //        CategoryName = categoryName
-    //    };
-
-    //    var dtos = await _mediator.Send(query);
-
-    //    if (dtos == null)
-    //    {
-    //        return NoContent();
-    //    }
-
-    //    return Ok(dtos);
-    //}
 
     [HttpPost(Name = "CreateCategory")]
     [ProducesResponseType(StatusCodes.Status201Created)]

@@ -30,8 +30,8 @@ public class MapperProfile : Profile
 
         CreateMap<Product, GetProductByNameViewModel>().ReverseMap();
         CreateMap<Product, CreateProductCommand>().ReverseMap();
-        CreateMap<ProductsDTO, Product>().ReverseMap()
-            .ForMember(x => x.Manufacturer, opt => opt.MapFrom(src => src.ManufacturerId));
+        CreateMap<ProductsDTO, Product>().ReverseMap();
+            //.ForMember(x => x.Manufacturer, opt => opt.MapFrom(src => src.ManufacturerId));
         CreateMap<Product, GetProductDTO>().ReverseMap();
         CreateMap<UpdateProductCommand, UpdateProductDTO>().ReverseMap()
             .ForMember(x => x.ManufacturerId, opt => opt.MapFrom(src => src.Manufacturer))
