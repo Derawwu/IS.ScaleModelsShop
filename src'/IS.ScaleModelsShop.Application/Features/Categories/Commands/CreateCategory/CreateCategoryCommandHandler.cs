@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using IS.ScaleModelsShop.API.Contracts.Category;
 using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
 using MediatR;
 
 namespace IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory;
 
-public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CreateCategoryDTO>
+public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryModel>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IMapper _mapper;
@@ -16,7 +17,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<CreateCategoryDTO> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<CategoryModel> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
 
@@ -28,7 +29,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
 
         category = await _categoryRepository.AddAsync(category);
 
-        var createdCategory = _mapper.Map<CreateCategoryDTO>(category);
+        var createdCategory = _mapper.Map<CategoryModel>(category);
 
         return createdCategory;
     }

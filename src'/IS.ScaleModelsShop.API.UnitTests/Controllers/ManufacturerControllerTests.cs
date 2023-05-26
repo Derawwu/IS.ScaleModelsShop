@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using IS.ScaleModelsShop.API.Contracts.Manufacturer;
+using IS.ScaleModelsShop.API.Contracts.Manufacturer.UpdateManufacturer;
 using IS.ScaleModelsShop.API.Controllers;
-using IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Queries.GetAllManufacturersList;
@@ -27,7 +28,7 @@ namespace IS.ScaleModelsShop.API.UnitTests.Controllers
             _mockMediator = new Mock<IMediator>();
 
             _mockMediator.Setup(x => x.Send(It.IsAny<CreateManufacturerCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new CreateManufacturerDTO());
+                .ReturnsAsync(new ManufacturerModel());
             _mockMediator.Setup(x => x.Send(It.IsAny<UpdateManufacturerCommand>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
@@ -39,7 +40,7 @@ namespace IS.ScaleModelsShop.API.UnitTests.Controllers
             };
 
             _mockMapper = new Mock<IMapper>();
-            _mockMapper.Setup(x => x.Map<UpdateManufacturerCommand>(It.IsAny<UpdateManufacturerDTO>()))
+            _mockMapper.Setup(x => x.Map<UpdateManufacturerCommand>(It.IsAny<UpdateManufacturerModel>()))
                 .Returns(_fakeUpdateManufacturerCommand);
 
             _controller = new ManufacturerController(_mockMediator.Object, _mockMapper.Object);
@@ -77,7 +78,7 @@ namespace IS.ScaleModelsShop.API.UnitTests.Controllers
         public async Task GetAllManufacturers_WhenCalled_ShouldReturnOkObjectResult()
         {
             _mockMediator.Setup(x => x.Send(It.IsAny<GetAllManufacturersListQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<ManufacturersListViewModel> { new ManufacturersListViewModel() });
+                .ReturnsAsync(new List<ManufacturerModel> { new ManufacturerModel() });
 
             var result = await _controller.GetAllManufacturers();
 
@@ -91,7 +92,7 @@ namespace IS.ScaleModelsShop.API.UnitTests.Controllers
         public async Task GetAllManufacturers_WhenCalledWithoutEntitiesInStorage_ShouldReturnNoContentResult()
         {
             _mockMediator.Setup(x => x.Send(It.IsAny<GetAllManufacturersListQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<ManufacturersListViewModel> { });
+                .ReturnsAsync(new List<ManufacturerModel> { });
 
             var result = await _controller.GetAllManufacturers();
 
@@ -110,8 +111,8 @@ namespace IS.ScaleModelsShop.API.UnitTests.Controllers
 
             result.Should().NotBeNull().And.BeOfType<OkObjectResult>();
 
-            var resultOrganizationModel = (CreateManufacturerDTO)((OkObjectResult)result).Value;
-            resultOrganizationModel.Should().NotBeNull().And.BeOfType<CreateManufacturerDTO>();
+            var resultOrganizationModel = (ManufacturerModel)((OkObjectResult)result).Value;
+            resultOrganizationModel.Should().NotBeNull().And.BeOfType<ManufacturerModel>();
         }
 
         #endregion
@@ -121,7 +122,7 @@ namespace IS.ScaleModelsShop.API.UnitTests.Controllers
         [Test]
         public async Task UpdateManufacturer_WhenCalled_ShouldReturnNoContentResult()
         {
-            var result = await _controller.UpdateManufacturer(_fakeManufacturerGuid, new UpdateManufacturerDTO());
+            var result = await _controller.UpdateManufacturer(_fakeManufacturerGuid, new UpdateManufacturerModel());
 
             result.Should().NotBeNull();
             result.Should().BeOfType<NoContentResult>();

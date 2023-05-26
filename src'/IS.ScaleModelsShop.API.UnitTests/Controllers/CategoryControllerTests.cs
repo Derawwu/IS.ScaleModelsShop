@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using IS.ScaleModelsShop.API.Contracts.Category;
 using IS.ScaleModelsShop.API.Controllers;
 using IS.ScaleModelsShop.Application.Features.Categories.Commands.CreateCategory;
 using IS.ScaleModelsShop.Application.Features.Categories.Queries.GetAllCategoriesList;
@@ -20,7 +21,7 @@ public class CategoryControllerTests
     {
         _mockMediator = new Mock<IMediator>();
         _mockMediator.Setup(x => x.Send(It.IsAny<CreateCategoryCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new CreateCategoryDTO());
+            .ReturnsAsync(new CategoryModel());
 
         _fakeCreateCategoryCommand = new CreateCategoryCommand
         {
@@ -54,7 +55,7 @@ public class CategoryControllerTests
     public async Task GetAllCategoriesList_WhenCalled_ShouldReturnOkObjectResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetAllCategoriesListQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<CategoryListViewModel> { new() });
+            .ReturnsAsync(new List<CategoryModel> { new() });
 
         var mockHttpContext = new Mock<HttpContext>();
         mockHttpContext.SetupGet(x => x.Response.Headers).Returns(new Mock<IHeaderDictionary>().Object);
@@ -71,7 +72,7 @@ public class CategoryControllerTests
     public async Task GetAllCategoriesList_WhenCalledWithoutCategoriesInStorage_ShouldReturnNoContentResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetAllCategoriesListQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<CategoryListViewModel> { });
+            .ReturnsAsync(new List<CategoryModel> { });
 
         var mockHttpContext = new Mock<HttpContext>();
         mockHttpContext.SetupGet(x => x.Response.Headers).Returns(new Mock<IHeaderDictionary>().Object);
@@ -93,8 +94,8 @@ public class CategoryControllerTests
 
         result.Should().NotBeNull().And.BeOfType<OkObjectResult>();
 
-        var resultOrganizationModel = (CreateCategoryDTO)((OkObjectResult)result).Value;
-        resultOrganizationModel.Should().NotBeNull().And.BeOfType<CreateCategoryDTO>();
+        var resultOrganizationModel = (CategoryModel)((OkObjectResult)result).Value;
+        resultOrganizationModel.Should().NotBeNull().And.BeOfType<CategoryModel>();
     }
 
     #endregion

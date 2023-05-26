@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using IS.ScaleModelsShop.API.Contracts.Product;
+using IS.ScaleModelsShop.API.Contracts.Product.CreateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated;
 using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
@@ -6,7 +8,7 @@ using MediatR;
 
 namespace IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, GetProductDTO>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, CreateProductModel>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IMapper _mapper;
@@ -20,7 +22,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
     }
 
-    public async Task<GetProductDTO> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<CreateProductModel> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
 
@@ -35,7 +37,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
         product = await _productRepository.AddAsync(product);
 
-        var result = _mapper.Map<GetProductDTO>(product);
+        var result = _mapper.Map<CreateProductModel>(product);
 
         return result;
     }

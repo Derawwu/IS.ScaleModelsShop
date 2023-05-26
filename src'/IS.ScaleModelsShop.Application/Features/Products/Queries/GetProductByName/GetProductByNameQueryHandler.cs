@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IS.ScaleModelsShop.API.Contracts.Product;
 using IS.ScaleModelsShop.Application.Exceptions;
 using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
@@ -6,7 +7,7 @@ using MediatR;
 
 namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByName;
 
-public class GetProductByNameQueryHandler : IRequestHandler<GetProductByNameQuery, GetProductByNameViewModel>
+public class GetProductByNameQueryHandler : IRequestHandler<GetProductByNameQuery, ProductModel>
 {
     private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
@@ -17,7 +18,7 @@ public class GetProductByNameQueryHandler : IRequestHandler<GetProductByNameQuer
         _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
     }
 
-    public async Task<GetProductByNameViewModel> Handle(GetProductByNameQuery request,
+    public async Task<ProductModel> Handle(GetProductByNameQuery request,
         CancellationToken cancellationToken)
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
@@ -26,7 +27,7 @@ public class GetProductByNameQueryHandler : IRequestHandler<GetProductByNameQuer
 
         if (product == null) throw new NotFoundException(nameof(Product), request.Name);
 
-        var productToReturn = _mapper.Map<GetProductByNameViewModel>(product);
+        var productToReturn = _mapper.Map<ProductModel>(product);
 
         return productToReturn;
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IS.ScaleModelsShop.API.Contracts.Product.GetProduct;
 using IS.ScaleModelsShop.Application.Exceptions;
 using IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCategory;
 using IS.ScaleModelsShop.Application.Repositories;
@@ -9,7 +10,7 @@ using MediatR;
 namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductByManufacturer;
 
 public class
-    GetProductsByManufacturerQueryHandler : IRequestHandler<GetProductsByManufacturerQuery, IEnumerable<ProductsDTO>>
+    GetProductsByManufacturerQueryHandler : IRequestHandler<GetProductsByManufacturerQuery, IEnumerable<ProductByManufacturerModel>>
 {
     private readonly IManufacturerRepository _manufacturerRepository;
     private readonly IMapper _mapper;
@@ -24,7 +25,7 @@ public class
             manufacturerRepository ?? throw new ArgumentNullException(nameof(manufacturerRepository));
     }
 
-    public async Task<IEnumerable<ProductsDTO>> Handle(GetProductsByManufacturerQuery request,
+    public async Task<IEnumerable<ProductByManufacturerModel>> Handle(GetProductsByManufacturerQuery request,
         CancellationToken cancellationToken)
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
@@ -39,11 +40,11 @@ public class
 
         if (productList.Any())
         {
-            var result = _mapper.Map<IEnumerable<ProductsDTO>>(productList);
+            var result = _mapper.Map<IEnumerable<ProductByManufacturerModel>>(productList);
 
             return result;
         }
 
-        return Array.Empty<ProductsDTO>();
+        return Array.Empty<ProductByManufacturerModel>();
     }
 }

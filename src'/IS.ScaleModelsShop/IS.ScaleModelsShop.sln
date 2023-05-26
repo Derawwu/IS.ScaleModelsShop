@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS.ScaleModelsShop.Applicat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS.ScaleModelsShop.Infrastructure.UnitTests", "..\IS.ScaleModelsShop.Infrastructure.UnitTests\IS.ScaleModelsShop.Infrastructure.UnitTests.csproj", "{BB3E2001-8FDF-4558-BD4A-B67CCC457022}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IS.ScaleModelsShop.API.Contracts", "..\IS.ScaleModelsShop.API.Contracts\IS.ScaleModelsShop.API.Contracts.csproj", "{50396673-EA51-47AD-BFED-70BE8CA91912}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{BB3E2001-8FDF-4558-BD4A-B67CCC457022}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB3E2001-8FDF-4558-BD4A-B67CCC457022}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB3E2001-8FDF-4558-BD4A-B67CCC457022}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50396673-EA51-47AD-BFED-70BE8CA91912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50396673-EA51-47AD-BFED-70BE8CA91912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50396673-EA51-47AD-BFED-70BE8CA91912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50396673-EA51-47AD-BFED-70BE8CA91912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{75CE00A2-E3EE-4A82-AEA6-D7446174C6F3} = {A640C655-EDE3-4BB4-AD32-FF773A12F89C}
 		{75C5F2AB-D70C-4137-A383-3E65F953BC38} = {3C3BDB08-442F-4C08-A285-0E0B064AD7A6}
 		{BB3E2001-8FDF-4558-BD4A-B67CCC457022} = {0CE7FF99-9E81-4D03-BF8C-513774B421EF}
+		{50396673-EA51-47AD-BFED-70BE8CA91912} = {A640C655-EDE3-4BB4-AD32-FF773A12F89C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2EE27E8-C137-4EAE-B6A4-65482D29E114}

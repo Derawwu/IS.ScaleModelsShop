@@ -1,9 +1,9 @@
-﻿using IS.ScaleModelsShop.Application.Features.Products.Queries.GetAllProductsPaginated;
+﻿using IS.ScaleModelsShop.API.Contracts.Product.CreateProduct;
 using MediatR;
 
 namespace IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 
-public class CreateProductCommand : IRequest<GetProductDTO>
+public class CreateProductCommand : IRequest<CreateProductModel>
 {
     public string Name { get; set; }
 
@@ -13,9 +13,4 @@ public class CreateProductCommand : IRequest<GetProductDTO>
 
     public Guid ManufacturerId { get; set; }
     public Guid CategoryId { get; set; }
-
-    public override string ToString()
-    {
-        return $"Product name: {Name}; Price: {Price}; Description: {Description}";
-    }
 }

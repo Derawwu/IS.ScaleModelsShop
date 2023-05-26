@@ -1,7 +1,9 @@
-﻿namespace IS.ScaleModelsShop.API.Contracts.Product.CreateProduct;
+﻿namespace IS.ScaleModelsShop.API.Contracts.Product.UpdateProduct;
 
-public class CreateProductModel
+public class UpdateProductModel
 {
+    public Guid Id { get; set; }
+
     public string Name { get; set; }
 
     public string Description { get; set; }
