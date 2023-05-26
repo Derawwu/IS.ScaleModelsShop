@@ -1,7 +1,6 @@
-﻿namespace IS.ScaleModelsShop.API.Contracts.Product.GetProduct
+﻿namespace IS.ScaleModelsShop.API.Contracts.Product.GetProduct;
+
+public class ProductByCategoryModel : ProductBaseModel
 {
-    public class ProductByCategoryModel : Product
-    {
-        public Guid ManufacturerId { get; set; }
-    }
+    public Guid ManufacturerId { get; set; }
 }

@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using IS.ScaleModelsShop.API.Contracts.Product;
+using IS.ScaleModelsShop.API.Contracts.Product.CreateProduct;
+using IS.ScaleModelsShop.API.Contracts.Product.GetProduct;
+using IS.ScaleModelsShop.API.Contracts.Product.UpdateProduct;
 using IS.ScaleModelsShop.API.Controllers;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateManufacturer;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer;
@@ -41,13 +45,13 @@ public class ProductsControllerTests
             ManufacturerId = Guid.NewGuid()
         };
 
-        _mockMapper.Setup(x => x.Map<UpdateProductCommand>(It.IsAny<UpdateProductDTO>()))
+        _mockMapper.Setup(x => x.Map<UpdateProductCommand>(It.IsAny<UpdateProductModel>()))
             .Returns(_fakeProduct);
 
         _mockMediator = new Mock<IMediator>();
 
         _mockMediator.Setup(x => x.Send(It.IsAny<CreateProductCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetProductDTO());
+            .ReturnsAsync(new CreateProductModel());
         _mockMediator.Setup(x => x.Send(It.IsAny<UpdateProductCommand>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         _mockMediator.Setup(x => x.Send(It.IsAny<DeleteProductCommand>(), It.IsAny<CancellationToken>()))
@@ -88,11 +92,11 @@ public class ProductsControllerTests
     public async Task GetAllProductsPaginated_WhenCalled_ShouldReturnOkObjectResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetAllProductsPaginatedQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetPaginatedProductViewModel
+            .ReturnsAsync(new PaginatedProductsModel
             {
                 Page = 1,
                 Size = 1,
-                Products = new List<GetProductDTO>
+                Products = new List<ProductModel>
                 {
                     new()
                 }
@@ -102,20 +106,20 @@ public class ProductsControllerTests
 
         result.Should().NotBeNull();
         result.Should().BeOfType<OkObjectResult>();
-        var model = (GetPaginatedProductViewModel)((OkObjectResult)result).Value;
+        var model = (PaginatedProductsModel)((OkObjectResult)result).Value;
         model.Should().NotBeNull();
-        model.Products.Should().BeOfType<List<GetProductDTO>>();
+        model.Products.Should().BeOfType<List<ProductModel>>();
     }
 
     [Test]
     public async Task GetAllProductsPaginated_WhenCalledWithoutEntitiesInStorage_ShouldReturnNoContentResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetAllProductsPaginatedQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetPaginatedProductViewModel
+            .ReturnsAsync(new PaginatedProductsModel()
             {
                 Page = 1,
                 Size = 1,
-                Products = new List<GetProductDTO>()
+                Products = new List<ProductModel>()
             });
 
         var result = await _controller.GetProductsPaginated(1, 1);
@@ -132,22 +136,22 @@ public class ProductsControllerTests
     public async Task GetProductsByCategoryName_WhenCalled_ShouldReturnOkObjectResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetProductsByCategoryQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ProductsDTO> { new ProductsDTO() });
+            .ReturnsAsync(new List<ProductByCategoryModel> { new ProductByCategoryModel() });
 
         var result = await _controller.GetProductsByCategory(Guid.Empty);
 
         result.Should().NotBeNull();
         result.Should().BeOfType<OkObjectResult>();
-        var model = (List<ProductsDTO>)((OkObjectResult)result).Value;
+        var model = (List<ProductByCategoryModel>)((OkObjectResult)result).Value;
         model.Should().NotBeNull();
-        model.Should().BeOfType<List<ProductsDTO>>();
+        model.Should().BeOfType<List<ProductByCategoryModel>>();
     }
 
     [Test]
     public async Task GetProductsByCategoryName_WhenCalledWithoutEntitiesInStorage_ShouldReturnNoContentResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetProductsByCategoryQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ProductsDTO> { });
+            .ReturnsAsync(new List<ProductByCategoryModel> { });
 
         var result = await _controller.GetProductsByCategory(Guid.Empty);
 
@@ -163,22 +167,22 @@ public class ProductsControllerTests
     public async Task GetProductsByManufacturerName_WhenCalled_ShouldReturnOkObjectResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetProductsByManufacturerQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ProductsDTO> { new ProductsDTO() });
+            .ReturnsAsync(new List<ProductByManufacturerModel> { new ProductByManufacturerModel() });
 
         var result = await _controller.GetProductsByManufacturer(Guid.Empty);
 
         result.Should().NotBeNull();
         result.Should().BeOfType<OkObjectResult>();
-        var model = (List<ProductsDTO>)((OkObjectResult)result).Value;
+        var model = (List<ProductByManufacturerModel>)((OkObjectResult)result).Value;
         model.Should().NotBeNull();
-        model.Should().BeOfType<List<ProductsDTO>>();
+        model.Should().BeOfType<List<ProductByManufacturerModel>>();
     }
 
     [Test]
     public async Task GetProductsByManufacturerName_WhenCalledWithoutEntitiesInStorage_ShouldReturnNoContentResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetProductsByManufacturerQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ProductsDTO> { });
+            .ReturnsAsync(new List<ProductByManufacturerModel> { });
 
         var result = await _controller.GetProductsByManufacturer(Guid.Empty);
 
@@ -194,7 +198,7 @@ public class ProductsControllerTests
     public async Task GetProductByName_WhenCalled_ShouldReturnOkObjectResult()
     {
         _mockMediator.Setup(x => x.Send(It.IsAny<GetProductByNameQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GetProductByNameViewModel());
+            .ReturnsAsync(new ProductModel());
 
         var result = await _controller.GetProductByName("A product name");
 
@@ -202,7 +206,7 @@ public class ProductsControllerTests
         result.Should().BeOfType<OkObjectResult>();
         var model = ((OkObjectResult)result).Value;
         model.Should().NotBeNull();
-        model.Should().BeOfType<GetProductByNameViewModel>();
+        model.Should().BeOfType<ProductModel>();
     }
 
     #endregion
@@ -216,8 +220,8 @@ public class ProductsControllerTests
 
         result.Should().NotBeNull().And.BeOfType<OkObjectResult>();
 
-        var resultProductModel = (GetProductDTO)((OkObjectResult)result).Value;
-        resultProductModel.Should().NotBeNull().And.BeOfType<GetProductDTO>();
+        var resultProductModel = (CreateProductModel)((OkObjectResult)result).Value;
+        resultProductModel.Should().NotBeNull().And.BeOfType<CreateProductModel>();
     }
 
     #endregion
@@ -227,7 +231,7 @@ public class ProductsControllerTests
     [Test]
     public async Task UpdateManufacturer_WhenCalled_ShouldReturnNoContentResult()
     {
-        var result = await _controller.UpdateProduct(_fakeProductId, new UpdateProductDTO());
+        var result = await _controller.UpdateProduct(_fakeProductId, new UpdateProductModel());
 
         result.Should().NotBeNull();
         result.Should().BeOfType<NoContentResult>();

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Azure;
+using IS.ScaleModelsShop.API.Contracts.Product.UpdateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.CreateProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.DeleteProduct;
 using IS.ScaleModelsShop.Application.Features.Products.Commands.UpdateProduct;
@@ -134,7 +134,7 @@ public class ProductsController : Controller
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId, [FromBody] UpdateProductDTO body)
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid productId, [FromBody] UpdateProductModel body)
     {
         var command = _mapper.Map<UpdateProductCommand>(body);
 

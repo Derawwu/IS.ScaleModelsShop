@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IS.ScaleModelsShop.API.Contracts.Product.GetProduct;
 using IS.ScaleModelsShop.Application.Exceptions;
 using IS.ScaleModelsShop.Application.Repositories;
 using IS.ScaleModelsShop.Domain.Entities;
@@ -7,7 +8,7 @@ using MediatR;
 
 namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCategory;
 
-public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCategoryQuery, IEnumerable<ProductsDTO>>
+public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCategoryQuery, IEnumerable<ProductByCategoryModel>>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IMapper _mapper;
@@ -21,7 +22,7 @@ public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCa
         _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
     }
 
-    public async Task<IEnumerable<ProductsDTO>> Handle(GetProductsByCategoryQuery request,
+    public async Task<IEnumerable<ProductByCategoryModel>> Handle(GetProductsByCategoryQuery request,
         CancellationToken cancellationToken)
     {
         _ = request ?? throw new ArgumentNullException(nameof(request));
@@ -37,11 +38,11 @@ public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCa
 
         if (productList.Any())
         {
-            var result = _mapper.Map<IEnumerable<ProductsDTO>>(productList);
+            var result = _mapper.Map<IEnumerable<ProductByCategoryModel>>(productList);
 
             return result;
         }
 
-        return Enumerable.Empty<ProductsDTO>();
+        return Enumerable.Empty<ProductByCategoryModel>();
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace IS.ScaleModelsShop.Application.Features.Products.Queries.GetProductsByCategory;
+﻿namespace IS.ScaleModelsShop.API.Contracts.Product.GetProduct;
 
-public class ProductsDTO
+public class ProductBaseModel
 {
     public Guid Id { get; set; }
 
@@ -9,6 +9,4 @@ public class ProductsDTO
     public string Description { get; set; } = string.Empty;
 
     public decimal Price { get; set; }
-
-    //public Guid Manufacturer { get; set; } = Guid.Empty;
 }

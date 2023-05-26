@@ -2,6 +2,7 @@
 using FluentAssertions;
 using FluentValidation.TestHelper;
 using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.CreateManufacturer;
+using IS.ScaleModelsShop.Application.Features.Manufacturers.Commands.UpdateManufacturer;
 using IS.ScaleModelsShop.Application.Repositories;
 using Moq;
 
@@ -22,7 +23,8 @@ public class CreateManufacturerCommandValidatorTests
 
         _fakeCreateManufacturerCommand = new CreateManufacturerCommand
         {
-            Name = nameof(CreateManufacturerCommand)
+            Name = nameof(CreateManufacturerCommand),
+            Website = "www.example.org"
         };
     }
 
@@ -91,5 +93,32 @@ public class CreateManufacturerCommandValidatorTests
         result
             .ShouldHaveValidationErrorFor(propertyName)
             .WithErrorMessage($"Manufacturer with the same '{propertyName}' already exists.");
+    }
+
+    [Test]
+    public async Task Validator_WhenCalledWithWrongWebsiteUrlFormat_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Website);
+        _fakeCreateManufacturerCommand.Website = "TestWebsite";
+
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
+
+        result
+            .ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage(
+                $"'{propertyName}' is not in the correct format. Expected format - \"http(s)://\" or \"www.\" following with the site name and domain name (e.g., www.example.org)");
+    }
+
+    [Test]
+    public async Task Validator_WhenCalledWithInappropriateWebsiteUrlDomain_ShouldHaveError()
+    {
+        var propertyName = nameof(CreateManufacturerCommand.Website);
+        _fakeCreateManufacturerCommand.Website = "www.example.ru";
+
+        var result = await _validator.TestValidateAsync(_fakeCreateManufacturerCommand);
+
+        result
+            .ShouldHaveValidationErrorFor(propertyName)
+            .WithErrorMessage($"Provided '{propertyName}' has unacceptable domain name( e.g., \".ru\" or \".su\")");
     }
 }
