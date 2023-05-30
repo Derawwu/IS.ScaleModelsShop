@@ -50,19 +50,19 @@ Contains repositories to work with MS SQL Database entities.
 The Domain project is the center part of the architecture. It holds all application domain objects.
 Contains ORM data models and other domain models and services that are injected and used in other levels of application.
 
-## 4.1 Application Interfaces
+## Application Interfaces
 
 Not applicable. The API does not have an UI as such within its solution.
 
-## 4.2 User Interface Design
+## User Interface Design
 
 Not applicable. The API is unaware of the UI.
 
-## 4.3 Data Conversions
+## Data Conversions
 
 The Mapper is responsible for mapping between the client view models into the logical business objects.
 
-## 4.4 Application Program Interfaces
+## Application Program Interfaces
 
 The IS.ScaleModelsShop has the following endpoints:
 
@@ -294,7 +294,7 @@ Adds a new category to the database.
 
 This returns the metadata of the added item.
 
-## 4.5 Use-Cases
+## Use-Cases
 
 The repository can be found here:
 https://github.com/Derawwu/IS.ScaleModelsShop
