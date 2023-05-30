@@ -1,6 +1,6 @@
 ﻿namespace IS.ScaleModelsShop.API.Contracts.Product.GetProduct;
 
-public class ProductBaseModel
+public abstract class ProductBaseModel
 {
     public Guid Id { get; set; }
 
