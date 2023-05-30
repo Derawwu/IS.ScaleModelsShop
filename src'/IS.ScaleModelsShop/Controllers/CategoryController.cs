@@ -24,8 +24,6 @@ public class CategoryController : Controller
     {
         var dtos = await _mediator.Send(new GetAllCategoriesListQuery());
 
-        //dtos.RemoveAll(x => x == null );
-
         if (!dtos.Any()) return new NoContentResult();
 
         return new OkObjectResult(dtos)
